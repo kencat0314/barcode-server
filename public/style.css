@@ -1,0 +1,50 @@
+/* Global dark theme base */
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
+  }
+  
+  /* Navbar */
+  .custom-navbar {
+    background-color: #1f1f1f;
+    border-bottom: 1px solid #333;
+  }
+  
+  .navbar-brand {
+    font-size: 1.4rem;
+    color: #2e8ddb !important;
+  }
+  
+  /* Pills nav */
+  .nav-pills .nav-link {
+    background-color: #1f1f1f;
+    color: #ccc;
+    border: 1px solid #2a2a2a;
+    margin-right: 5px;
+  }
+  
+  .nav-pills .nav-link.active {
+    background-color: #2e8ddb;
+    color: #121212;
+    font-weight: bold;
+  }
+  
+  /* Tab content */
+  .tab-content {
+    padding: 1rem;
+    background-color: #1c1c1c;
+    border: 1px solid #2c2c2c;
+    border-radius: 5px;
+  }
+  
+  /* Buttons */
+  .btn-success {
+    background-color: #2e8ddb;
+    border: none;
+  }
+  
+  .btn-success:hover {
+    background-color: #2e8ddb;
+  }
+  
