@@ -48,3 +48,21 @@ body {
     background-color: #2e8ddb;
   }
   
+  /* Modals */
+  .modal-lower {
+    margin-top: 30vh;
+  }
+
+  .modal-mid {
+    margin-top: 20vh;
+  }
+
+  td, th {
+    white-space: nowrap;       /* Prevent text from wrapping */
+    overflow: hidden;          /* Hide overflow text */
+    text-overflow: ellipsis;   /* Add "..." at the end */
+    max-height: 1.5em;         /* Approx height for 1 line */
+    vertical-align: middle;    /* Center content vertically */
+  }
+  
+  

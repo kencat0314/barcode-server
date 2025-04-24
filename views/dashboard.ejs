@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Warehouse Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid">
+      <a class="navbar-brand text-light">Warehouse Dashboard</a>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <ul class="nav nav-pills mb-3" id="tabs" role="tablist">
+      <li class="nav-item">
+        <button class="nav-link <%= activeTab === 'heads' ? 'active' : '' %>" data-bs-toggle="pill" data-bs-target="#tab-heads">Order Heads</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link <%= activeTab === 'rows' ? 'active' : '' %>" data-bs-toggle="pill" data-bs-target="#tab-rows">Order Rows</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link <%= activeTab === 'stock' ? 'active' : '' %>" data-bs-toggle="pill" data-bs-target="#tab-stock">Stock Levels</button>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <!-- Order Heads -->
+      <div class="tab-pane fade <%= activeTab === 'heads' ? 'show active' : '' %>" id="tab-heads">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <button class="btn btn-success btn-sm" onclick="openDynamicModal('heads')">+ Add</button>
+          <button class="btn btn-success btn-sm" onclick="openCSVModal('heads')">Import from CSV</button>
+        </div>
+        <%- include('partials/table', { data: heads, tab: 'heads', currentPage: currentPage }) %>
+        <%- include('partials/pagination', { tab: 'heads', currentPage: currentPage, activeTab: activeTab }) %>
+      </div>
+
+      <!-- Order Rows -->
+      <div class="tab-pane fade <%= activeTab === 'rows' ? 'show active' : '' %>" id="tab-rows">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <button class="btn btn-success btn-sm" onclick="openDynamicModal('rows')">+ Add</button>
+          <button class="btn btn-success btn-sm" onclick="openCSVModal('rows')">Import from CSV</button>
+        </div>
+        <%- include('partials/table', { data: rows, tab: 'rows', currentPage: currentPage }) %>
+        <%- include('partials/pagination', { tab: 'rows', currentPage: currentPage, activeTab: activeTab }) %>
+      </div>
+
+      <!-- Stock Levels -->
+      <div class="tab-pane fade <%= activeTab === 'stock' ? 'show active' : '' %>" id="tab-stock">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <button class="btn btn-success btn-sm" onclick="openDynamicModal('stock')">+ Add</button>
+          <button class="btn btn-success btn-sm" onclick="openCSVModal('stock')">Import from CSV</button>
+        </div>
+        <%- include('partials/table', { data: stock, tab: 'stock', currentPage: currentPage }) %>
+        <%- include('partials/pagination', { tab: 'stock', currentPage: currentPage, activeTab: activeTab }) %>
+      </div>
+    </div>
+  </div>
+
+  <%- include('partials/modals') %>
+
+  <% if (error) { %>
+    <div class="modal fade show" id="errorModal" tabindex="-1" style="display:block; background-color: rgba(0,0,0,0.5);">
+      <div class="modal-dialog">
+        <div class="modal-content bg-danger text-white">
+          <div class="modal-header">
+            <h5 class="modal-title">Database Error</h5>
+            <button type="button" class="btn-close btn-close-white" onclick="hideErrorModal()"></button>
+          </div>
+          <div class="modal-body">
+            <p><%= error %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function hideErrorModal() {
+        document.getElementById('errorModal').style.display = 'none';
+      }
+    </script>
+  <% } %>
+
+  <script>
+    const modalConfigs = {
+      heads: {
+        title: "Add Order Head",
+        action: "/add/heads",
+        upload: "/upload/heads",
+        fields: [
+          { name: 'ORDER_NO', label: 'Order No' },
+          { name: 'CUST_NAME', label: 'Customer Name' },
+          { name: 'DEL_ADR_STR1', label: 'Address Line 1' },
+          { name: 'DEL_ADR_CITY', label: 'City' },
+          { name: 'DEL_ZIP_CODE', label: 'ZIP Code' },
+          { name: 'DEL_COUNTRY', label: 'Country' },
+          { name: 'PICKING_STATUS', label: 'Picking Status' },
+          { name: 'HD_ID', label: 'HD ID' }
+        ]
+      },
+      rows: {
+        title: "Add Order Row",
+        action: "/add/rows",
+        upload: "/upload/rows",
+        fields: [
+          { name: 'ORW_NUMBER', label: 'Row Number' },
+          { name: 'ORW_ART_NO', label: 'Article No' },
+          { name: 'ORW_BAR_CODE', label: 'Barcode' },
+          { name: 'ORW_NAME_1', label: 'Name 1' },
+          { name: 'QTY_Left_to_pick', label: 'Qty Left to Pick' },
+          { name: 'QTY_Picked', label: 'Qty Picked' },
+          { name: 'QTY_Original_Order', label: 'Qty Ordered' },
+          { name: 'ORW_STOCK_LOCATION', label: 'Stock Location' },
+          { name: 'STATUS', label: 'Status' }
+        ]
+      },
+      stock: {
+        title: "Add Stock Item",
+        action: "/add/stock",
+        upload: "/upload/stock",
+        fields: [
+          { name: 'Article_NO', label: 'Article No' },
+          { name: 'Barcode', label: 'Barcode' },
+          { name: 'Article_text', label: 'Description' },
+          { name: 'Stock_Location', label: 'Location' },
+          { name: 'QTY', label: 'Quantity' }
+        ]
+      }
+    };
+
+    function openDynamicModal(tabKey) {
+      const config = modalConfigs[tabKey];
+      document.getElementById('modalTitle').innerText = config.title;
+      document.getElementById('universalForm').action = config.action;
+
+      const modalFields = document.getElementById('modalFields');
+      modalFields.innerHTML = config.fields.map(field => `
+        <div class="col-md-6">
+          <label class="form-label">${field.label}</label>
+          <input type="text" name="${field.name}" class="form-control" required>
+        </div>
+      `).join('');
+
+      new bootstrap.Modal(document.getElementById('universalAddModal')).show();
+    }
+
+    function openCSVModal(tabKey) {
+      const config = modalConfigs[tabKey];
+      document.getElementById('csvModalTitle').innerText = `Import ${config.title}`;
+      document.getElementById('csvUploadForm').action = config.upload;
+      new bootstrap.Modal(document.getElementById('importCSVModal')).show();
+    }
+
+    function openEditModal(tabKey, rowData) {
+      const config = modalConfigs[tabKey];
+      const form = document.getElementById('editForm');
+      const fieldsDiv = document.getElementById('editFields');
+      const rowId = rowData.ORDER_NO || rowData.ORW_NUMBER || rowData.Article_NO;
+
+      form.action = `/edit/${tabKey}?tab=${tabKey}&page=<%= currentPage %>`;
+      document.getElementById('editId').value = rowId;
+
+      fieldsDiv.innerHTML = config.fields.map(field => `
+        <div class="col-md-6">
+          <label class="form-label">${field.label}</label>
+          <input type="text" name="${field.name}" value="${rowData[field.name] || ''}" class="form-control" required>
+        </div>
+      `).join('');
+
+      new bootstrap.Modal(document.getElementById('editModal')).show();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const tabParam = new URLSearchParams(window.location.search).get('tab');
+      if (tabParam) {
+        document.querySelector(`[data-bs-target="#tab-${tabParam}"]`)?.click();
+      }
+    });
+  </script>
+</body>
+</html>
