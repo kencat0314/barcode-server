@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Order Heads</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="container mt-5">
+  <h2 class="mb-4">Order Heads Table</h2>
+
+  <% if (data && data.length > 0) { %>
+    <table class="table table-dark table-striped table-bordered">
+      <thead>
+        <tr>
+          <% Object.keys(data[0]).forEach(col => { %>
+            <th><%= col %></th>
+          <% }); %>
+        </tr>
+      </thead>
+      <tbody>
+        <% data.forEach(row => { %>
+          <tr>
+            <% Object.values(row).forEach(cell => { %>
+              <td><%= cell %></td>
+            <% }); %>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <div class="alert alert-warning">No data found in <strong>order_heads</strong> table.</div>
+  <% } %>
+</body>
+</html>

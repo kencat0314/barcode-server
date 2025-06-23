@@ -1,0 +1,14 @@
+<div class="d-flex justify-content-center mt-3">
+    <ul class="pagination pagination-sm mb-0">
+      <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+        <a class="page-link bg-dark text-light border-secondary" href="?page=<%= currentPage - 1 %>&tab=<%= tab %>">&laquo; Prev</a>
+      </li>
+      <li class="page-item active">
+        <span class="page-link bg-secondary border-secondary text-light"><%= currentPage %></span>
+      </li>
+      <li class="page-item">
+        <a class="page-link bg-dark text-light border-secondary" href="?page=<%= currentPage + 1 %>&tab=<%= tab %>">Next &raquo;</a>
+      </li>
+    </ul>
+  </div>
+  

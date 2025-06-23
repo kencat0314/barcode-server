@@ -1,0 +1,63 @@
+<form method="POST" action="/delete/<%= tab %>">
+  <div class="table-responsive">
+    <table class="table table-bordered table-dark table-sm align-middle">
+      <thead>
+        <tr>
+          <th style="width: 40px;"><input type="checkbox" onclick="toggleSelectAll(this)"></th>
+          <% if (data.length) { Object.keys(data[0]).forEach(key => { %>
+            <th><%= key %></th>
+          <% }) } %>
+          <th class="text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (!data.length) { %>
+          <tr><td colspan="100%" class="text-center">No data found.</td></tr>
+        <% } else { %>
+          <% data.forEach((row) => { %>
+            <tr>
+              <td>
+                <input type="checkbox" name="ids[]" value="<%= row.id || row.ORDER_NO || row.ORW_NUMBER || row.Article_NO %>">
+              </td>
+              <% Object.entries(row).forEach(([key, value]) => { %>
+                <td><%= value %></td>
+              <% }) %>
+              <td class="text-center">
+                <div class="d-flex justify-content-center gap-2">
+                  <button type="submit"
+                          name="singleId"
+                          value="<%= row.id || row.ORDER_NO || row.ORW_NUMBER || row.Article_NO %>"
+                          class="btn btn-sm btn-outline-secondary"
+                          title="Delete">
+                    <i class="bi bi-trash3-fill"></i>
+                  </button>
+                  <button type="button"
+                          class="btn btn-sm btn-outline-secondary"
+                          onclick='openEditModal("<%= tab %>", <%- JSON.stringify(row) %>)'
+                          title="Edit">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          <% }) %>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-2">
+    <button type="submit"
+            class="btn btn-outline-danger btn-sm"
+            onclick="return confirm('Delete selected items?')">
+      <i class="bi bi-trash3"></i> Delete Selected
+    </button>
+  </div>
+</form>
+
+<script>
+  function toggleSelectAll(source) {
+    const checkboxes = document.querySelectorAll('input[name="ids[]"]');
+    checkboxes.forEach(cb => cb.checked = source.checked);
+  }
+</script>

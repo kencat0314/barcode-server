@@ -1,0 +1,58 @@
+<!-- Modal: Add Entry -->
+<div class="modal fade" id="universalAddModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-mid">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitle">Add Entry</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="universalForm" method="POST">
+          <div class="modal-body row g-3" id="modalFields"></div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Add</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal: CSV Upload -->
+  <div class="modal fade" id="importCSVModal" tabindex="-1">
+    <div class="modal-dialog modal-md modal-lower">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header">
+          <h5 class="modal-title" id="csvModalTitle">Import from CSV</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="csvUploadForm" method="POST" enctype="multipart/form-data">
+          <div class="modal-body px-3">
+            <p class="mb-3">Please select a <code>.csv</code> file formatted with correct column headers.</p>
+            <div class="input-group">
+              <input type="file" name="csvfile" accept=".csv" class="form-control" required>
+              <button type="submit" class="btn btn-success">Upload CSV</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal: Edit Entry -->
+  <div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-mid">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Entry</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="editForm" method="POST">
+          <input type="hidden" name="id" id="editId">
+          <div class="modal-body row g-3" id="editFields"></div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
