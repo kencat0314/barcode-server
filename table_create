@@ -11,7 +11,7 @@ CREATE TABLE order_heads (
 );
 
 CREATE TABLE order_rows (
-  ORW_NUMBER VARCHAR(50) PRIMARY KEY,
+  ORW_NUMBER VARCHAR(50) ,
   ORW_ART_NO VARCHAR(50),
   ORW_BAR_CODE VARCHAR(100),
   ORW_NAME_1 VARCHAR(100),
@@ -24,7 +24,7 @@ CREATE TABLE order_rows (
 );
 
 CREATE TABLE stock_levels (
-  Article_NO VARCHAR(50) PRIMARY KEY,
+  Article_NO VARCHAR(50),
   Barcode VARCHAR(100),
   Article_text VARCHAR(255),
   Stock_Location VARCHAR(100),
