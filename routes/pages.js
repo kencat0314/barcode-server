@@ -13,7 +13,7 @@ const tabConfig = {
     table: 'order_heads',
     fields: [
       'ORDER_NO', 'CUST_NAME', 'DEL_ADR_STR1', 'DEL_ADR_CITY',
-      'DEL_ZIP_CODE', 'DEL_COUNTRY', 'PICKING_STATUS', 'HD_ID'
+      'DEL_ZIP_CODE', 'DEL_COUNTRY'
     ]
   },
   rows: {
@@ -48,18 +48,18 @@ router.get('/dashboard', (req, res) => {
     heads: {
       sql: `
         SELECT ORDER_NO, CUST_NAME, DEL_ADR_STR1, DEL_ADR_CITY,
-        DEL_ZIP_CODE, DEL_COUNTRY, PICKING_STATUS, HD_ID,
+        DEL_ZIP_CODE, DEL_COUNTRY, 
         DATE_FORMAT(Last_modified, '%d.%m.%Y %H:%i:%s') AS Last_modified
         FROM order_heads
         LIMIT ? OFFSET ?
-      `,
+      `, //PICKING_STATUS, HD_ID,
       params: [limit, offset]
     },
     rows: {
       sql: `
         SELECT ORW_NUMBER, ORW_ART_NO, ORW_BAR_CODE, ORW_NAME_1,
                QTY_Left_to_pick, QTY_Picked, QTY_Original_Order,
-               ORW_STOCK_LOCATION, STATUS,
+               ORW_STOCK_LOCATION,
                DATE_FORMAT(Last_modified, '%d.%m.%Y %H:%i:%s') AS Last_modified
         FROM order_rows
         LIMIT ? OFFSET ?
@@ -103,7 +103,9 @@ router.post('/add/:tab', (req, res) => {
   const config = tabConfig[tab];
   if (!config) return res.status(400).send('Invalid tab');
 
-  const values = config.fields.map(field => req.body[field] || null);
+	const values = config.fields.map(field => req.body[field] ?? '');
+
+  //const values = config.fields.map(field => req.body[field] || null);
   const sql = `
     INSERT INTO ${config.table} (${config.fields.join(', ')}, Last_modified)
     VALUES (${values.map(() => '?').join(', ')}, NOW())
@@ -211,7 +213,7 @@ function loadDashboard(res, errorMessage = null, activeTab = 'heads') {
   const queries = {
     heads: `
       SELECT ORDER_NO, CUST_NAME, DEL_ADR_STR1, DEL_ADR_CITY,
-      DEL_ZIP_CODE, DEL_COUNTRY, PICKING_STATUS, HD_ID,
+      DEL_ZIP_CODE, DEL_COUNTRY, 
       DATE_FORMAT(Last_modified, '%d.%m.%Y %H:%i:%s') AS Last_modified
       FROM order_heads
     `,
