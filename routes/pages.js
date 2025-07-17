@@ -251,4 +251,22 @@ function loadDashboard(res, errorMessage = null, activeTab = 'heads') {
   });
 }
 
+
+// GET /api/order_heads - return order heads as JSON
+router.get('/api/order_heads', (req, res) => {
+  const sql = `
+    SELECT ORDER_NO, CUST_NAME, DEL_ADR_STR1, DEL_ADR_CITY,
+           DEL_ZIP_CODE, DEL_COUNTRY, 
+           DATE_FORMAT(Last_modified, '%d.%m.%Y %H:%i:%s') AS Last_modified
+    FROM order_heads
+  `;
+
+  db.query(sql, (err, rows) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(rows); // return array of order_heads
+  });
+});
+
 module.exports = router;

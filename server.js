@@ -24,6 +24,6 @@ app.get('/', (req, res) => {
 // Use your router for dynamic pages
 app.use('/', pages);
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+  //console.log(Server running on http://192.168.69.152:${port});
 });
