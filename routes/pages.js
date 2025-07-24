@@ -253,12 +253,9 @@ function loadDashboard(res, errorMessage = null, activeTab = 'heads') {
 
 
 // GET /api/order_heads - return order heads as JSON
-router.get('/api/order_heads', (req, res) => {
+router.get('/order_heads', (req, res) => {
   const sql = `
-    SELECT ORDER_NO, CUST_NAME, DEL_ADR_STR1, DEL_ADR_CITY,
-           DEL_ZIP_CODE, DEL_COUNTRY, 
-           DATE_FORMAT(Last_modified, '%d.%m.%Y %H:%i:%s') AS Last_modified
-    FROM order_heads
+    SELECT ORDER_NO, CUST_NAME    FROM order_heads
   `;
 
   db.query(sql, (err, rows) => {
@@ -266,6 +263,19 @@ router.get('/api/order_heads', (req, res) => {
       return res.status(500).json({ error: err.message });
     }
     res.json(rows); // return array of order_heads
+  });
+});
+
+router.get('/order_rows', (req, res) => {
+  const orderNo = req.query.order_no; // get order_no from URL query
+  const sql = 'SELECT * FROM order_rows WHERE ORW_NUMBER = ?';
+
+  db.all(sql, [orderNo], (err, rows) => {
+    if (err) {
+      res.status(500).send({ error: 'Database error' });
+    } else {
+      res.json(rows);
+    }
   });
 });
 
