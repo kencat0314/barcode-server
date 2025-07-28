@@ -270,7 +270,7 @@ router.get('/order_rows', (req, res) => {
   const orderNo = req.query.order_no; // get order_no from URL query
   const sql = 'SELECT * FROM order_rows WHERE ORW_NUMBER = ?';
 
-  db.all(sql, [orderNo], (err, rows) => {
+  db.query(sql, [orderNo], (err, rows) => {
     if (err) {
       res.status(500).send({ error: 'Database error' });
     } else {
