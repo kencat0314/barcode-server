@@ -1,29 +1,63 @@
 const express = require('express');
 const path = require('path');
+const getRawBody = require('raw-body');
+const contentType = require('content-type');
 
 const app = express();
-const port = 8080;
+const port = 3000;
 
-// Import your routes
-const pages = require('./routes/pages');
-
-// Serve static assets (CSS, images, etc.)
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Capture raw body for all requests (before body parsing)
+app.use((req, res, next) => {
+  const contentTypeHeader = req.headers['content-type'] || '';
+  if (contentTypeHeader.includes('application/json')) {
+    getRawBody(req, {
+      length: req.headers['content-length'],
+      limit: '1mb',
+      encoding: (() => {
+        try {
+          return contentType.parse(req).parameters.charset || 'utf-8';
+        } catch {
+          return 'utf-8';
+        }
+      })(),
+    })
+      .then(raw => {
+        req.rawBody = raw.toString();
+        try {
+          req.body = JSON.parse(req.rawBody);
+        } catch (err) {
+          req.body = undefined;
+        }
+        next();
+      })
+      .catch(err => next(err));
+  } else {
+    next();
+  }
+});
+
+
+
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-// Use EJS for rendering views
+
+// View engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Optional: Redirect root path to /dashboard
+// Routes
+const pages = require('./routes/pages');
+app.use('/', pages);
+
+// Redirect root to dashboard
 app.get('/', (req, res) => {
   res.redirect('/dashboard');
 });
 
-// Use your router for dynamic pages
-app.use('/', pages);
-
 app.listen(port, '0.0.0.0', () => {
-  //console.log(Server running on http://192.168.69.152:${port});
+  console.log(`Server running on http://0.0.0.0:${port}`);
 });

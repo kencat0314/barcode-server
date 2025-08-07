@@ -279,4 +279,72 @@ router.get('/order_rows', (req, res) => {
   });
 });
 
+router.get('/stock_levels', (req, res) => {
+  const artNo = req.query.art_no;
+  const sql = 'SELECT QTY FROM stock_levels WHERE Article_NO = ?';
+
+  db.query(sql, [artNo], (err, rows) => {
+    if (err) {
+      res.status(500).send({ error: 'Database error' });
+    } else if (rows.length > 0) {
+      res.json(rows[0].QTY); // return just the quantity number
+    } else {
+      res.status(404).send({ error: 'Item not found' });
+    }
+  });
+});
+
+router.post('/update_stock', (req, res) => {
+  console.log('--- Incoming POST to /update_stock ---');
+  console.log('Headers:', req.headers);
+  console.log('Raw Body:', req.rawBody?.toString());
+  console.log('Parsed Body:', req.body);
+  console.log('--------------------------------------');
+  let  { picked_qty, order_no, article_no } = req.body;
+
+  picked_qty = parseInt(picked_qty, 10);
+  order_no = parseInt(order_no, 10);
+
+  if (!article_no || typeof picked_qty !== 'number') {
+    return res.status(400).json({ error: 'Invalid request data' });
+  }
+  const sqlStockLv = `UPDATE stock_levels
+    SET QTY = QTY - ?
+    WHERE Article_NO = ?`;
+
+  const sqlOrderRows = `
+    UPDATE order_rows 
+    SET QTY_Picked = QTY_Picked + ?, QTY_Left_to_pick = QTY_Left_to_pick - ? 
+    WHERE ORW_ART_NO = ? AND ORW_NUMBER = ?
+  `;
+
+  db.query(sqlStockLv, [picked_qty, article_no], (err, result1) => {
+    if (err) {
+      return res.status(500).send({ error: 'Database error (stock update)' });
+    }
+    if (result1.affectedRows === 0) {
+      return res.status(404).send({ error: 'Item not found in stock_levels' });
+    }
+
+    db.query(sqlOrderRows, [picked_qty, picked_qty, article_no, order_no], (err, result2) => {
+      if (err) {
+        return res.status(500).send({ error: 'Database error (order row update)' });
+      }
+      if (result2.affectedRows === 0) {
+        return res.status(404).send({ error: 'Item not found in order_rows' });
+      }
+
+      res.json({ message: 'Stock and order rows updated successfully' });
+    });
+  });
+});
+
+function rollback(connection, res, message) {
+  connection.rollback(() => {
+    connection.release();
+    res.status(500).send({ error: message });
+  });
+}
+
+
 module.exports = router;
