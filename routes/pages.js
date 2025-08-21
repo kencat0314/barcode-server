@@ -8,8 +8,8 @@ const db = require('../db');
 const upload = multer({ dest: 'uploads/' });
 
 // Make sure requests hitting this router are parsed, too.
-router.use(express.json({ limit: '1mb' }));
-router.use(express.urlencoded({ extended: true }));
+//router.use(express.json({ limit: '1mb' }));
+//router.use(express.urlencoded({ extended: true }));
 
 const tabConfig = {
   heads: {
