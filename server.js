@@ -11,7 +11,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.use(express.json());
 app.use(express.json({
   limit: '1mb',
-  verify: (req, res, buf) => { req.rawBody = buf; },
+  verify: (req, res, buf) => { req.rawBody = buf.toString(); },
 }));
 
 app.use(express.urlencoded({ extended: true }));

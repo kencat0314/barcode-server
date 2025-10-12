@@ -1,4 +1,21 @@
 {
+  "name": "barcode-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "main": "server.js",
+  "bin": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build:win": "pkg . --targets node18-win-x64 --output dist/barcode-server.exe"
+  },
+  "pkg": {
+    "assets": [
+      "public/**/*",
+      "views/**/*",
+      "node_modules/sqlite3/lib/binding/**/node_sqlite3.node"
+    ]
+  },
   "dependencies": {
     "content-type": "^1.0.5",
     "csv-parser": "^3.2.0",
@@ -10,22 +27,7 @@
     "raw-body": "^3.0.0",
     "sqlite3": "^5.1.7"
   },
-  "scripts": {
-    "start": "node server.js"
-  },
-  "name": "barcode-server",
-  "version": "1.0.0",
-  "main": "db.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kencat0314/barcode-server.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/kencat0314/barcode-server/issues"
-  },
-  "homepage": "https://github.com/kencat0314/barcode-server#readme",
-  "description": ""
+  "devDependencies": {
+    "pkg": "^5.8.1"
+  }
 }
