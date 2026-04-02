@@ -347,7 +347,7 @@ router.post('/order_rows/:order_no/reset', (req, res) => {
 
   const sql = `
     UPDATE order_rows
-    SET STATUS = 'IDLE'
+    SET STATUS = 'DONE'
     WHERE ORW_NUMBER = ? AND ORW_ART_NO = ?
   `;
   db.query(sql, [orderNo, articleNo], (err, result) => {
