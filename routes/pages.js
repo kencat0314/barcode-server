@@ -363,7 +363,6 @@ router.post('/order_rows/:order_no/reset', (req, res) => {
   });
 });
 
-
 router.post('/order_rows/:order_no/reset_idle', (req, res) => {
   const orderNo = req.params.order_no;
   const articleNo = req.query.art_no || req.body?.article_no;
@@ -390,6 +389,7 @@ router.post('/order_rows/:order_no/reset_idle', (req, res) => {
     res.json({ ok: true });
   });
 });
+
 
 function rollback(connection, res, message) {
   connection.rollback(() => {
