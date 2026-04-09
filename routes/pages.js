@@ -367,7 +367,7 @@ router.post('/order_rows/:order_no/reset', (req, res) => {
 router.post('/order_rows/:order_no/reset_idle', (req, res) => {
   const orderNo = req.params.order_no;
   const articleNo = req.query.art_no || req.body?.article_no;
-  console.log('[RESET]', { orderNo, articleNo });
+  console.log('[RESET_IDLE]', { orderNo, articleNo });
 
   if (!orderNo || !articleNo) {
     return res.status(400).json({ error: 'order_no and article_no required' });
@@ -380,10 +380,10 @@ router.post('/order_rows/:order_no/reset_idle', (req, res) => {
   `;
   db.query(sql, [orderNo, articleNo], (err, result) => {
     if (err) {
-      console.error('[RESET] DB error:', err);
+      console.error('[RESET_IDLE] DB error:', err);
       return res.status(500).json({ error: 'Database error' });
     }
-    console.log('[RESET] affectedRows:', result.affectedRows);
+    console.log('[RESET_IDLE] affectedRows:', result.affectedRows);
     if (!result.affectedRows) {
       return res.status(404).json({ error: 'Row not found' });
     }
