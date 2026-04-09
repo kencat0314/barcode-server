@@ -347,7 +347,35 @@ router.post('/order_rows/:order_no/reset', (req, res) => {
 
   const sql = `
     UPDATE order_rows
-    SET STATUS = 'DONE'
+    SET STATUS = 'IDLE'
+    WHERE ORW_NUMBER = ? AND ORW_ART_NO = ?
+  `;
+  db.query(sql, [orderNo, articleNo], (err, result) => {
+    if (err) {
+      console.error('[RESET] DB error:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    console.log('[RESET] affectedRows:', result.affectedRows);
+    if (!result.affectedRows) {
+      return res.status(404).json({ error: 'Row not found' });
+    }
+    res.json({ ok: true });
+  });
+});
+
+
+router.post('/order_rows/:order_no/reset_idle', (req, res) => {
+  const orderNo = req.params.order_no;
+  const articleNo = req.query.art_no || req.body?.article_no;
+  console.log('[RESET]', { orderNo, articleNo });
+
+  if (!orderNo || !articleNo) {
+    return res.status(400).json({ error: 'order_no and article_no required' });
+  }
+
+  const sql = `
+    UPDATE order_rows
+    SET STATUS = 'IDLE'
     WHERE ORW_NUMBER = ? AND ORW_ART_NO = ?
   `;
   db.query(sql, [orderNo, articleNo], (err, result) => {
